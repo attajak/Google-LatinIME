@@ -109,7 +109,7 @@ repositories {
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:+'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.preference:preference:1.2.1'
 
