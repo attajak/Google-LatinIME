@@ -4,4 +4,4 @@ plugins {
 }
 
 rootProject.name = 'LatinIME'
-include ':tools:make-keyboard-text'
+// include ':tools:make-keyboard-text'

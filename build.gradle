@@ -91,6 +91,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'androidx.core:core:1.12.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'com.google.android.material:material:1.9.0'
@@ -104,4 +105,9 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+}
+
+configurations.all {
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk7"
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk8"
 }
