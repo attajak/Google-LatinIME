@@ -26,6 +26,21 @@ The project also supports standard Android Studio/Gradle builds via `build.gradl
 ## Development Conventions
 
 - **Hybrid Language:** Most UI/logic is in Java. Performance-sensitive dictionary and suggestion logic is implemented in C++ (exposed via JNI).
-- **Testing:** The `tests/` directory contains a comprehensive suite. Use `tests/AndroidManifest.xml` and the `LatinIMETests` target in `Android.bp` as references for test structure.
+## Testing
+
+LatinIME has a comprehensive suite of tests located in the `tests/` directory.
+
+### Running Tests
+The tests in this project are configured as **Instrumented Tests** (Android Tests), not JVM-based Unit Tests.
+
+- **To run instrumented tests:**
+  You must have a connected Android device or emulator.
+  ```bash
+  ./gradlew connectedDebugAndroidTest
+  ```
+
+- **Note on Unit Tests:**
+  The project currently does not have standard JVM-based Unit Tests configured. The existing tests in `tests/` require an Android environment to run.
+
 - **Licensing:** Adhere strictly to the project's license guidelines, ensuring all code additions maintain the Apache 2.0 license as specified in the `NOTICE` files and `Android.bp` configurations.
 - **Project Structure:** Adhere to the existing directory conventions (e.g., `java/src/com/android/inputmethod/latin/...` for application code).
