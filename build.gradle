@@ -4,15 +4,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.2'
+        classpath 'com.android.tools.build:gradle:9.3.2'
     }
 }
 
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 35
-    ndkVersion '29.0.14206865'
+    compileSdkVersion 37
+    buildToolsVersion = '37.0.0'
+    ndkVersion = '29.0.14206865'
 
     namespace = 'com.android.inputmethod.latin'
 
@@ -27,8 +28,9 @@ android {
 
     defaultConfig {
         minSdkVersion 30
-        targetSdkVersion 35
-        versionName "1.0"
+        targetSdkVersion 37
+        versionName '1.0'
+        versionCode 30
 
         applicationId 'com.android.inputmethod.latin'
         testApplicationId 'com.android.inputmethod.latin.tests'
@@ -44,7 +46,7 @@ android {
     }
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled = false
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard.flags'
@@ -52,10 +54,10 @@ android {
     }
     compileOptions {
         // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
-        // Sets Java compatibility to Java 8
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
+        // Sets Java compatibility to Java 21
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     flavorDimensions ['default']
     sourceSets {
@@ -70,45 +72,46 @@ android {
             manifest.srcFile 'tests/AndroidManifest.xml'
         }
     }
-    externalNativeBuild {
-//        ndkBuild {
-//            path 'native/jni/Android.mk'
-//        }
-        cmake {
-            path 'native/jni/CMakeLists.txt'
-        }
+    lintOptions {
+        checkReleaseBuilds = false
     }
-    androidResources {
+    aaptOptions {
         noCompress 'dict'
     }
-    lint {
-        checkReleaseBuilds = false
+    externalNativeBuild {
+        ndkBuild {
+            path 'native/jni/Android.mk'
+	}
     }
     buildFeatures {
         buildConfig = true
     }
+    lint {
+        baseline = file('lint-baseline.xml')
+    }
 }
 
 repositories {
-    maven { url = "../../../prebuilts/fullsdk-darwin/extras/android/m2repository" }
-    maven { url = "../../../prebuilts/fullsdk-linux/extras/android/m2repository" }
+    // maven { url = "../../../prebuilts/fullsdk-darwin/extras/android/m2repository" }
+    // maven { url = "../../../prebuilts/fullsdk-linux/extras/android/m2repository" }
     mavenCentral()
     google()
 }
 
 dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:+'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation "org.mockito:mockito-core:1.9.5"
+    testImplementation 'junit:junit:4.13.2'
+
+    androidTestImplementation "org.mockito:mockito-core:5.23.0"
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.1.1'
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.4.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.2.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
