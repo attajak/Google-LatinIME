@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 9.3.2" type="baseline" client="gradle" dependencies="false" name="AGP (9.3.2)" variant="all" version="9.3.2">
+<issues format="6" by="lint 9.4.0" type="baseline" client="gradle" dependencies="false" name="AGP (9.4.0)" variant="all" version="9.4.0">
 
     <issue
         id="MissingSuperCall"
@@ -7161,39 +7161,6 @@
             file="java/src/com/android/inputmethod/latin/LatinIME.java"
             line="653"
             column="13"/>
-    </issue>
-
-    <issue
-        id="AndroidGradlePluginVersion"
-        message="A newer version of com.android.tools.build:gradle than 9.3.2 is available: 9.4.0"
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:9.3.2&apos;"
-        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="7"
-            column="19"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.annotation:annotation than 1.2.0 is available: 1.10.0"
-        errorLine1="    androidTestImplementation &apos;androidx.annotation:annotation:1.2.0&apos;"
-        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="114"
-            column="31"/>
-    </issue>
-
-    <issue
-        id="GradleDynamicVersion"
-        message="Avoid using + in version numbers; can lead to unpredictable and unrepeatable builds (androidx.legacy:legacy-support-v4:+)"
-        errorLine1="    implementation &apos;androidx.legacy:legacy-support-v4:+&apos;"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="102"
-            column="20"/>
     </issue>
 
     <issue
