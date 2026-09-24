@@ -18,8 +18,6 @@ android {
             minorApiLevel = 2
         }
     }
-    buildToolsVersion = '37.0.0'
-    ndkVersion = '29.0.14206865'
 
     // Required if using classes in android.test.runner
     useLibrary 'android.test.runner'

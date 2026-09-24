@@ -33,8 +33,7 @@ LOCAL_CFLAGS += -Werror -Wall -Wextra -Weffc++ -Wformat=2 -Wcast-qual -Wcast-ali
     -fexceptions -DHAVE_PTHREAD
 
 # To suppress compiler warnings for unused variables/functions used for debug features etc.
-LOCAL_CFLAGS += -Wno-unused-parameter -Wno-unused-function \
-    -Wno-deprecated-copy -Wno-vla-cxx-extension
+LOCAL_CFLAGS += -Wno-unused-parameter -Wno-unused-function
 
 # HACK: -mstackrealign is required for x86 builds running on pre-KitKat devices to avoid crashes
 # with SSE instructions.
