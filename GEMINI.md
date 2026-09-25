@@ -19,13 +19,15 @@ This project supports two build workflows:
 This is the primary build system for integrating LatinIME into the Android OS build. The project is managed via `Android.bp` files across the repository, utilizing the Soong build system.
 
 ### 2. Standard Android Development (Gradle)
-The project also supports standard Android Studio/Gradle builds via `build.gradle` and the `gradlew` wrapper.
-
-**Note:** The provided Gradle wrapper (4.6) is quite old and may be incompatible with newer JDKs (e.g., JDK 21+). You may need to use an older JDK or attempt to update the wrapper if you intend to use Gradle for local development.
+The project supports standard Android Studio/Gradle builds via `build.gradle` and the `gradlew` wrapper (targeting Gradle 9.x / AGP 9.4.1).
+- Uses AndroidX Preference (`PreferenceFragmentCompat`) for all settings fragments and screens.
+- Java 21 compatibility with core library desugaring.
 
 ## Development Conventions
 
 - **Hybrid Language:** Most UI/logic is in Java. Performance-sensitive dictionary and suggestion logic is implemented in C++ (exposed via JNI).
+- **AndroidX & Modernization:** Use AndroidX components (`PreferenceFragmentCompat`, `AppCompatActivity`) for UI and settings.
+
 ## Testing
 
 LatinIME has a comprehensive suite of tests located in the `tests/` directory.
@@ -38,9 +40,6 @@ The tests in this project are configured as **Instrumented Tests** (Android Test
   ```bash
   ./gradlew connectedDebugAndroidTest
   ```
-
-- **Note on Unit Tests:**
-  The project currently does not have standard JVM-based Unit Tests configured. The existing tests in `tests/` require an Android environment to run.
 
 - **Licensing:** Adhere strictly to the project's license guidelines, ensuring all code additions maintain the Apache 2.0 license as specified in the `NOTICE` files and `Android.bp` configurations.
 - **Project Structure:** Adhere to the existing directory conventions (e.g., `java/src/com/android/inputmethod/latin/...` for application code).
