@@ -160,7 +160,7 @@ public class SentenceLevelAdapter {
         return new SentenceTextInfoParams(originalTextInfo, wordItems);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     public static SentenceSuggestionsInfo reconstructSuggestions(
             SentenceTextInfoParams originalTextInfoParams, SuggestionsInfo[] results) {
         if (results == null || results.length == 0) {

@@ -44,7 +44,7 @@ public final class AndroidSpellCheckerSession extends AndroidWordLevelSpellCheck
         mResources = service.getResources();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     private SentenceSuggestionsInfo fixWronglyInvalidatedWordWithSingleQuote(TextInfo ti,
             SentenceSuggestionsInfo ssi) {
         final CharSequence typedText = TextInfoCompatUtils.getCharSequenceOrString(ti);

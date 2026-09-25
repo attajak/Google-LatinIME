@@ -108,7 +108,7 @@ public final class CursorAnchorInfoUtils {
      * @return the {@link CursorAnchorInfo} object based on the current layout. {@code null} if it
      * is not feasible.
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @Nullable
     private static CursorAnchorInfo extractFromTextViewInternal(@Nonnull final TextView textView) {
         final Layout layout = textView.getLayout();

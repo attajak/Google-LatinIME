@@ -22,19 +22,20 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 import android.util.Log;
 
 /**
- * A base abstract class for a {@link PreferenceFragment} that implements a nested
+ * A base abstract class for a {@link PreferenceFragmentCompat} that implements a nested
  * {@link PreferenceScreen} of the main preference screen.
  */
-public abstract class SubScreenFragment extends PreferenceFragment
+public abstract class SubScreenFragment extends PreferenceFragmentCompat
         implements OnSharedPreferenceChangeListener {
     private OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
+    private int mPreferencesResId;
 
     static void setPreferenceEnabled(final String prefKey, final boolean enabled,
             final PreferenceScreen screen) {
@@ -90,11 +91,17 @@ public abstract class SubScreenFragment extends PreferenceFragment
         return res.getString(applicationLabelRes);
     }
 
-    @Override
     public void addPreferencesFromResource(final int preferencesResId) {
-        super.addPreferencesFromResource(preferencesResId);
-        TwoStatePreferenceHelper.replaceCheckBoxPreferencesBySwitchPreferences(
-                getPreferenceScreen());
+        mPreferencesResId = preferencesResId;
+    }
+
+    @Override
+    public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+        if (mPreferencesResId != 0) {
+            setPreferencesFromResource(mPreferencesResId, rootKey);
+            TwoStatePreferenceHelper.replaceCheckBoxPreferencesBySwitchPreferences(
+                    getPreferenceScreen());
+        }
     }
 
     @Override

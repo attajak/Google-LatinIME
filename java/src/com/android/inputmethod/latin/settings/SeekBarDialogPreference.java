@@ -20,16 +20,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
-import android.preference.DialogPreference;
+import androidx.preference.Preference;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.inputmethod.latin.R;
 
-public final class SeekBarDialogPreference extends DialogPreference
-        implements SeekBar.OnSeekBarChangeListener {
+public final class SeekBarDialogPreference extends Preference
+        implements SeekBar.OnSeekBarChangeListener, DialogInterface.OnClickListener {
     public interface ValueProxy {
         public int readValue(final String key);
         public int readDefaultValue(final String key);
@@ -45,7 +46,6 @@ public final class SeekBarDialogPreference extends DialogPreference
 
     private TextView mValueView;
     private SeekBar mSeekBar;
-
     private ValueProxy mValueProxy;
 
     public SeekBarDialogPreference(final Context context, final AttributeSet attrs) {
@@ -56,7 +56,6 @@ public final class SeekBarDialogPreference extends DialogPreference
         mMinValue = a.getInt(R.styleable.SeekBarDialogPreference_minValue, 0);
         mStepValue = a.getInt(R.styleable.SeekBarDialogPreference_stepValue, 0);
         a.recycle();
-        setDialogLayoutResource(R.layout.seek_bar_dialog);
     }
 
     public void setInterface(final ValueProxy proxy) {
@@ -66,13 +65,27 @@ public final class SeekBarDialogPreference extends DialogPreference
     }
 
     @Override
-    protected View onCreateDialogView() {
-        final View view = super.onCreateDialogView();
-        mSeekBar = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar);
+    protected void onClick() {
+        super.onClick();
+        final Context context = getContext();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(getTitle());
+        final View view = LayoutInflater.from(context).inflate(R.layout.seek_bar_dialog, null);
+        builder.setView(view);
+
+        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar_dialog_bar);
         mSeekBar.setMax(mMaxValue - mMinValue);
         mSeekBar.setOnSeekBarChangeListener(this);
-        mValueView = (TextView)view.findViewById(R.id.seek_bar_dialog_value);
-        return view;
+        mValueView = (TextView) view.findViewById(R.id.seek_bar_dialog_value);
+
+        final int value = mValueProxy.readValue(getKey());
+        mValueView.setText(mValueProxy.getValueText(value));
+        mSeekBar.setProgress(getProgressFromValue(clipValue(value)));
+
+        builder.setPositiveButton(android.R.string.ok, this)
+               .setNegativeButton(android.R.string.cancel, this)
+               .setNeutralButton(R.string.button_default, this);
+        builder.show();
     }
 
     private int getProgressFromValue(final int value) {
@@ -96,22 +109,7 @@ public final class SeekBarDialogPreference extends DialogPreference
     }
 
     @Override
-    protected void onBindDialogView(final View view) {
-        final int value = mValueProxy.readValue(getKey());
-        mValueView.setText(mValueProxy.getValueText(value));
-        mSeekBar.setProgress(getProgressFromValue(clipValue(value)));
-    }
-
-    @Override
-    protected void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
-        builder.setPositiveButton(android.R.string.ok, this)
-            .setNegativeButton(android.R.string.cancel, this)
-            .setNeutralButton(R.string.button_default, this);
-    }
-
-    @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        super.onClick(dialog, which);
         final String key = getKey();
         if (which == DialogInterface.BUTTON_NEUTRAL) {
             final int value = mValueProxy.readDefaultValue(key);

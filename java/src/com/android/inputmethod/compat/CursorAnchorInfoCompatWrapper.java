@@ -50,7 +50,7 @@ public class CursorAnchorInfoCompatWrapper {
         // This class is not publicly instantiable.
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @Nullable
     public static CursorAnchorInfoCompatWrapper wrap(@Nullable final CursorAnchorInfo instance) {
         if (BuildCompatUtils.EFFECTIVE_SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -112,7 +112,7 @@ public class CursorAnchorInfoCompatWrapper {
         throw new UnsupportedOperationException("not supported.");
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private static final class RealWrapper extends CursorAnchorInfoCompatWrapper {
 
         @Nonnull

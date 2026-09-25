@@ -46,7 +46,7 @@ public final class SpellCheckerSettingsActivity extends PreferenceActivity
         return modIntent;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.KITKAT)
     @Override
     public boolean isValidFragment(String fragmentName) {
         return FragmentUtils.isValidFragment(fragmentName);

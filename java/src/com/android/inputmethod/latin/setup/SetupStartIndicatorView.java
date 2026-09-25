@@ -40,7 +40,7 @@ public final class SetupStartIndicatorView extends LinearLayout {
         labelView.setIndicatorView(findViewById(R.id.setup_start_indicator));
     }
 
-    public static final class LabelView extends TextView {
+    public static final class LabelView extends androidx.appcompat.widget.AppCompatTextView {
         private View mIndicatorView;
 
         public LabelView(final Context context, final AttributeSet attrs) {

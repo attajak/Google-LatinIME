@@ -20,8 +20,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
 import android.provider.Settings.Secure;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,18 +42,22 @@ public final class SettingsFragment extends InputMethodSettingsFragment {
     private static final int MENU_HELP_AND_FEEDBACK = Menu.FIRST + 1;
 
     @Override
-    public void onCreate(final Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+        super.onCreatePreferences(savedInstanceState, rootKey);
+        setPreferencesFromResource(R.xml.prefs, rootKey);
         setHasOptionsMenu(true);
         setInputMethodSettingsCategoryTitle(R.string.language_selection_title);
         setSubtypeEnablerTitle(R.string.select_language);
-        addPreferencesFromResource(R.xml.prefs);
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
-        preferenceScreen.setTitle(
-                ApplicationUtils.getActivityTitleResId(getActivity(), SettingsActivity.class));
-        if (!ProductionFlags.ENABLE_ACCOUNT_SIGN_IN) {
-            final Preference accountsPreference = findPreference(Settings.SCREEN_ACCOUNTS);
-            preferenceScreen.removePreference(accountsPreference);
+        if (preferenceScreen != null) {
+            preferenceScreen.setTitle(
+                    ApplicationUtils.getActivityTitleResId(getActivity(), SettingsActivity.class));
+            if (!ProductionFlags.ENABLE_ACCOUNT_SIGN_IN) {
+                final Preference accountsPreference = findPreference(Settings.SCREEN_ACCOUNTS);
+                if (accountsPreference != null) {
+                    preferenceScreen.removePreference(accountsPreference);
+                }
+            }
         }
     }
 

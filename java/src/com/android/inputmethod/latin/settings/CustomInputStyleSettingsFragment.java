@@ -23,9 +23,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
 import androidx.core.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,7 +47,7 @@ import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 
 import java.util.ArrayList;
 
-public final class CustomInputStyleSettingsFragment extends PreferenceFragment
+public final class CustomInputStyleSettingsFragment extends PreferenceFragmentCompat
         implements CustomInputStylePreference.Listener {
     private static final String TAG = CustomInputStyleSettingsFragment.class.getSimpleName();
     // Note: We would like to turn this debug flag true in order to see what input styles are
@@ -92,13 +92,12 @@ public final class CustomInputStyleSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+        setPreferencesFromResource(R.xml.additional_subtype_settings, rootKey);
 
         mPrefs = getPreferenceManager().getSharedPreferences();
         RichInputMethodManager.init(getActivity());
         mRichImm = RichInputMethodManager.getInstance();
-        addPreferencesFromResource(R.xml.additional_subtype_settings);
         setHasOptionsMenu(true);
     }
 

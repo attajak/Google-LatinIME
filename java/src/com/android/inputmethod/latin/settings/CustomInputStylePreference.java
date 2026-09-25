@@ -17,14 +17,13 @@
 package com.android.inputmethod.latin.settings;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.DialogPreference;
-import android.preference.Preference;
+import androidx.preference.Preference;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodSubtype;
@@ -41,8 +40,8 @@ import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 
 import java.util.TreeSet;
 
-final class CustomInputStylePreference extends DialogPreference
-        implements DialogInterface.OnCancelListener {
+final class CustomInputStylePreference extends Preference
+        implements DialogInterface.OnCancelListener, DialogInterface.OnClickListener {
     private static final boolean DEBUG_SUBTYPE_ID = false;
 
     interface Listener {
@@ -71,14 +70,49 @@ final class CustomInputStylePreference extends DialogPreference
     public CustomInputStylePreference(final Context context, final InputMethodSubtype subtype,
             final Listener proxy) {
         super(context, null);
-        setDialogLayoutResource(R.layout.additional_subtype_dialog);
         setPersistent(false);
         mProxy = proxy;
         setSubtype(subtype);
     }
 
+    @Override
+    protected void onClick() {
+        super.onClick();
+        show();
+    }
+
     public void show() {
-        showDialog(null);
+        final Context context = getContext();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (isIncomplete()) {
+            builder.setTitle(R.string.add_style);
+        } else {
+            builder.setTitle(getTitle());
+        }
+        final View v = LayoutInflater.from(context).inflate(R.layout.additional_subtype_dialog, null);
+        builder.setView(v);
+
+        mSubtypeLocaleSpinner = (Spinner) v.findViewById(R.id.subtype_locale_spinner);
+        mSubtypeLocaleSpinner.setAdapter(mProxy.getSubtypeLocaleAdapter());
+        mKeyboardLayoutSetSpinner = (Spinner) v.findViewById(R.id.keyboard_layout_set_spinner);
+        mKeyboardLayoutSetSpinner.setAdapter(mProxy.getKeyboardLayoutSetAdapter());
+        ViewCompatUtils.setTextAlignment(
+                mKeyboardLayoutSetSpinner, ViewCompatUtils.TEXT_ALIGNMENT_VIEW_START);
+
+        builder.setCancelable(true).setOnCancelListener(this);
+        if (isIncomplete()) {
+            builder.setPositiveButton(R.string.add, this)
+                    .setNegativeButton(android.R.string.cancel, this);
+        } else {
+            builder.setPositiveButton(R.string.save, this)
+                    .setNeutralButton(android.R.string.cancel, this)
+                    .setNegativeButton(R.string.remove, this);
+            final SubtypeLocaleItem localeItem = new SubtypeLocaleItem(mSubtype);
+            final KeyboardLayoutSetItem layoutItem = new KeyboardLayoutSetItem(mSubtype);
+            setSpinnerPosition(mSubtypeLocaleSpinner, localeItem);
+            setSpinnerPosition(mKeyboardLayoutSetSpinner, layoutItem);
+        }
+        builder.show();
     }
 
     public final boolean isIncomplete() {
@@ -94,13 +128,11 @@ final class CustomInputStylePreference extends DialogPreference
         mSubtype = subtype;
         if (isIncomplete()) {
             setTitle(null);
-            setDialogTitle(R.string.add_style);
             setKey(KEY_NEW_SUBTYPE);
         } else {
             final String displayName =
                     SubtypeLocaleUtils.getSubtypeDisplayNameInSystemLocale(subtype);
             setTitle(displayName);
-            setDialogTitle(displayName);
             setKey(KEY_PREFIX + subtype.getLocale() + "_"
                     + SubtypeLocaleUtils.getKeyboardLayoutSetName(subtype));
         }
@@ -112,39 +144,6 @@ final class CustomInputStylePreference extends DialogPreference
 
     public boolean hasBeenModified() {
         return mSubtype != null && !mSubtype.equals(mPreviousSubtype);
-    }
-
-    @Override
-    protected View onCreateDialogView() {
-        final View v = super.onCreateDialogView();
-        mSubtypeLocaleSpinner = (Spinner) v.findViewById(R.id.subtype_locale_spinner);
-        mSubtypeLocaleSpinner.setAdapter(mProxy.getSubtypeLocaleAdapter());
-        mKeyboardLayoutSetSpinner = (Spinner) v.findViewById(R.id.keyboard_layout_set_spinner);
-        mKeyboardLayoutSetSpinner.setAdapter(mProxy.getKeyboardLayoutSetAdapter());
-        // All keyboard layout names are in the Latin script and thus left to right. That means
-        // the view would align them to the left even if the system locale is RTL, but that
-        // would look strange. To fix this, we align them to the view's start, which will be
-        // natural for any direction.
-        ViewCompatUtils.setTextAlignment(
-                mKeyboardLayoutSetSpinner, ViewCompatUtils.TEXT_ALIGNMENT_VIEW_START);
-        return v;
-    }
-
-    @Override
-    protected void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
-        builder.setCancelable(true).setOnCancelListener(this);
-        if (isIncomplete()) {
-            builder.setPositiveButton(R.string.add, this)
-                    .setNegativeButton(android.R.string.cancel, this);
-        } else {
-            builder.setPositiveButton(R.string.save, this)
-                    .setNeutralButton(android.R.string.cancel, this)
-                    .setNegativeButton(R.string.remove, this);
-            final SubtypeLocaleItem localeItem = new SubtypeLocaleItem(mSubtype);
-            final KeyboardLayoutSetItem layoutItem = new KeyboardLayoutSetItem(mSubtype);
-            setSpinnerPosition(mSubtypeLocaleSpinner, localeItem);
-            setSpinnerPosition(mKeyboardLayoutSetSpinner, layoutItem);
-        }
     }
 
     private static void setSpinnerPosition(final Spinner spinner, final Object itemToSelect) {
@@ -168,7 +167,6 @@ final class CustomInputStylePreference extends DialogPreference
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        super.onClick(dialog, which);
         switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
             final boolean isEditing = !isIncomplete();
@@ -199,11 +197,6 @@ final class CustomInputStylePreference extends DialogPreference
     @Override
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
-        final Dialog dialog = getDialog();
-        if (dialog == null || !dialog.isShowing()) {
-            return superState;
-        }
-
         final SavedState myState = new SavedState(superState);
         myState.mSubtype = mSubtype;
         return myState;

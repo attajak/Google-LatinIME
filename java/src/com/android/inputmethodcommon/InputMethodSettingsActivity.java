@@ -18,21 +18,23 @@ package com.android.inputmethodcommon;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
 
 /**
  * This is a helper class for an IME's settings preference activity. It's recommended for every
  * IME to have its own settings preference activity which inherits this class.
  */
-public abstract class InputMethodSettingsActivity extends PreferenceActivity
+public abstract class InputMethodSettingsActivity extends AppCompatActivity
         implements InputMethodSettingsInterface {
     private final InputMethodSettingsImpl mSettings = new InputMethodSettingsImpl();
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this));
-        mSettings.init(this, getPreferenceScreen());
+        final PreferenceScreen preferenceScreen = PreferenceManager.getDefaultSharedPreferences(this) != null ?
+                null : null;
+        mSettings.init(this, preferenceScreen);
     }
 
     /**

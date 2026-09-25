@@ -17,10 +17,10 @@
 package com.android.inputmethod.latin.settings;
 
 import android.os.Build;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceGroup;
-import android.preference.SwitchPreference;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.SwitchPreferenceCompat;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,7 @@ public class TwoStatePreferenceHelper {
 
     static void addSwitchPreferenceBasedOnCheckBoxPreference(final CheckBoxPreference checkBox,
             final PreferenceGroup group) {
-        final SwitchPreference switchPref = new SwitchPreference(checkBox.getContext());
+        final SwitchPreferenceCompat switchPref = new SwitchPreferenceCompat(checkBox.getContext());
         switchPref.setTitle(checkBox.getTitle());
         switchPref.setKey(checkBox.getKey());
         switchPref.setOrder(checkBox.getOrder());

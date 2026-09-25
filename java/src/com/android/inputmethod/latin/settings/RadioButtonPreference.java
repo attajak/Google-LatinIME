@@ -17,7 +17,8 @@
 package com.android.inputmethod.latin.settings;
 
 import android.content.Context;
-import android.preference.Preference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RadioButton;
@@ -72,12 +73,17 @@ public class RadioButtonPreference extends Preference {
     }
 
     @Override
-    protected void onBindView(final View view) {
-        super.onBindView(view);
-        mRadioButton = (RadioButton)view.findViewById(R.id.radio_button);
-        mRadioButton.setChecked(mIsSelected);
-        mRadioButton.setOnClickListener(mClickListener);
-        view.setOnClickListener(mClickListener);
+    public void onBindViewHolder(final PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        mRadioButton = (RadioButton)holder.findViewById(R.id.radio_button);
+        if (mRadioButton != null) {
+            mRadioButton.setChecked(mIsSelected);
+            mRadioButton.setOnClickListener(mClickListener);
+        }
+        final View itemView = holder.itemView;
+        if (itemView != null) {
+            itemView.setOnClickListener(mClickListener);
+        }
     }
 
     public boolean isSelected() {

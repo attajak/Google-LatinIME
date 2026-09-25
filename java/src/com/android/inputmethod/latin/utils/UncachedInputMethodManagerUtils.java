@@ -21,7 +21,7 @@ import android.provider.Settings;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
-/*
+/**
  * A utility class for {@link InputMethodManager}. Unlike {@link RichInputMethodManager}, this
  * class provides synchronous, non-cached access to {@link InputMethodManager}. The setup activity
  * is a good example to use this class because {@link InputMethodManagerService} may not be aware of

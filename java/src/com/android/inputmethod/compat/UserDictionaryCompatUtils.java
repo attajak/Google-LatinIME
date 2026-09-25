@@ -40,7 +40,7 @@ public final class UserDictionaryCompatUtils {
 
     // {@link UserDictionary.Words#addWord(Context,String,int,String,Locale)} was introduced
     // in API level 16 (Build.VERSION_CODES.JELLY_BEAN).
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void addWordWithShortcut(final Context context, final String word,
             final int freq, final String shortcut, final Locale locale) {
         UserDictionary.Words.addWord(context, word, freq, shortcut, locale);
